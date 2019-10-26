@@ -1,4 +1,13 @@
+# cache
+__pycache__
+key.pyc
+
 # env file
 .env
 
+# other
 .DS_Store*
+
+# folder
+file/
+
