@@ -3,7 +3,6 @@
 
 import os
 import os.path
-import json
 import key
 from newsapi import NewsApiClient
 from time import sleep
