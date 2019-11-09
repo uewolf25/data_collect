@@ -4,10 +4,9 @@
 directory=(general sports business)
 
 # all remove 3 genre text files
-if [ -e "*.txt" ] 
-then
-	rm *.txt
-fi
+rm -v *.txt
+
+echo "---------------------------------------------------------"
 
 # all remove dir
 for dir in ${directory[@]}
