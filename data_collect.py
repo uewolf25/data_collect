@@ -6,44 +6,71 @@ import os.path
 import json
 import key
 from newsapi import NewsApiClient
+from time import sleep
 
 API_KEY = key.KEY
 
+categories = ['sports', 'business', 'general']
+text_files = ['sports.txt', 'goverment.txt', 'society.txt']
+path = os.getcwd()
+
+
+###################################################
+### NewsAPIを用いて３ジャンルの文書をダウンロードする。 ###
+###################################################
 def print_data():
-  
   # クライアントを初期化
   newsapi = NewsApiClient(api_key=API_KEY)
 
-  # headlines = newsapi.get_everything(q='sports', pageSize='100')
-  headlines = newsapi.get_top_headlines(country='jp', category='sports', page=1)
+  for category in categories:
+    for number in range(1,6):
+      headlines = newsapi.get_top_headlines(country='jp', category=category, page=number)
 
-  for data in headlines["articles"]:
-    data_url = data["url"]
-    load_html(data_url)
+      for data in headlines["articles"]:
+        data_url = data["url"]
+        load_html(data_url, category)
+        sleep(3)
 
-    # if os.path.exists( os.path.join("img"),  )
-      
-  # newsapi.get_sources()
+#####################################
+### wgetを使って文書をダウンロードする ###
+#####################################
+def load_html(data, dir_name):
+  os.chdir( path + '/' + dir_name)
+  os.system('wget -E -H ' + data)
 
-def load_html(data):    
-  # print(data)
-  os.system('cd file/; wget ' + data)
+####################################
+### ファイル・ディレクトリを更新する。 ###
+####################################
+def update_files():
+  for category in categories:
+    remove_old_folder(category)
 
-def remove_old_folder():
-  # 「img」フォルダが存在した時に消しておく。
-  if os.path.exists('file/'):
-      os.system('rm -r file/')
-  os.system('mkdir file/')
+  for text in text_files:
+    remove_textfiles(text)
 
-def add_extension():
-  name, extension = os.path.splitext(file_name)
-  # 拡張子がない場合の追加
-  if not extension:
-      extension = ".html"
-  html_file = '{}{}'.format(name, extension)
-  return html_file
+######################################################
+### 古いディレクトリを削除し、新しいディレクトリを生成する。 ###
+######################################################
+def remove_old_folder(dir_name):
+  dir_path = path + '/' + dir_name
+  if os.path.exists(dir_path):
+      os.system('rm -r ' + dir_name)
+      print('Deleting old directory ... \t' + dir_name)
+  os.system('mkdir ' + dir_name)
+  print('Generating new directory ... \t' + dir_name)
+
+################################################
+### 古いテキストを削除し、新しいテキストを生成する。 ###
+################################################
+def remove_textfiles(text):
+  if os.path.exists(text):
+    os.system('rm -r ' + text)
+    print('Deleting old text files ... \t' + text)
+  os.system('touch ' + text)
+  print('Generating new text files ... \t' + text)
+
 
 if __name__ == '__main__':
-  remove_old_folder()
+  update_files()
   print_data()
-  
+
