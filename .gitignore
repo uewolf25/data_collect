@@ -10,6 +10,12 @@ key.pyc
 
 # folder
 file/
+sports/
+general/
+business/
+
+# text
+*.txt
 
 # relation Mecab
 mecab-0.996/
