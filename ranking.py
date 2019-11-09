@@ -9,39 +9,56 @@ import MeCab
 from collections import Counter
 
 
-###########################################
-# HTML文書を目的の本文の部分のみスクレイピングし、#
-# タグを消して１つの文字列とする。              #
-###########################################
+###############################################
+### HTML文書を目的の本文の部分のみスクレイピングし、###
+### タグを消して１つの文字列とする。              ###
+###############################################
 def html_parser():
 
-  article = ''
+  file_path = []
 
-  with open('file/index.html.1.html') as f:
+  all_files = os.listdir('file')
+  for local_file in all_files:
+    file_path.append(os.path.join("file", local_file))
+    
+  for local_file in file_path:
+    try:
+      with open(local_file) as f:
+        text = bs4.BeautifulSoup(f, "html.parser").select('p')
+    except IOError:
+      print('cannot be opened .')
+    except UnicodeDecodeError:
+      print(local_file + ' is cannot be decoded')
 
-    text = bs4.BeautifulSoup(f, "html.parser").select('p')
     for item in text:
+      article = ''
       get_articles = str( item.get_text() )
       article += get_articles
-    # print(article)
-  annalys_documents(article)
+      add_text(article)
 
-    # 全部は出力しないmax36
-    # soup = bs4.BeautifulSoup(f, "html.parser").contents[3]
-    # print(soup)
+#####################################
+### 取得した文書をテキストに追記していく ###
+#####################################
+def add_text(str):
+  with open("text.txt", "a") as f:
+    f.write(str)
 
-    # .get_text()でタグを全て非表示で文章のみ表示させる。
-    # soup = bs4.BeautifulSoup(f, "html.parser")
-    # print(soup.get_text())
-
-#####################################################################
-# Mecabを用いて、取得した文書を解析する。                                  #
-# 表層形  品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用型,活用形,原形,読み,発音 #
-#####################################################################
-def annalys_documents(doc):
+#########################################################################
+### Mecabを用いて、取得した文書を解析する。                                  ###
+### 表層形  品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用型,活用形,原形,読み,発音 ###
+#########################################################################
+def annalys_documents():
+  # 名詞収集
   noun = ''
+  # ファイルから読み込んだ文字列を格納
+  text = ''
   count_noun = Counter()
-  text = doc
+  try:
+    with open("text.txt", "r") as f:
+      text = f.read()
+  except IOError:
+    print('cannot be opend .')
+
   tagger = MeCab.Tagger()
   annalys_text = tagger.parse(text)
   for words in annalys_text.split("\n"):
@@ -57,12 +74,11 @@ def annalys_documents(doc):
       # 前から２文字目でスライスして「名詞」に合致するか判別
       if part_of_speech == "名詞":
         noun = word
-        # print(noun)
         count_noun[noun] += 1
+  # 名詞と出現回数を全部出力
   for key, count in count_noun.most_common():
     print(key + " : " + str(count))
-      
 
 if __name__ == '__main__':
   html_parser()
-  # annalys_documents()
+  annalys_documents()
