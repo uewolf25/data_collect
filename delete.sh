@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 3 genre directories
-directory=(general sports business)
+directory=(general sports business all)
 
 # all remove 3 genre text files
 rm -v *.txt

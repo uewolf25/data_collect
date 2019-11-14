@@ -14,7 +14,7 @@ install: $(MAIN)
 
 run: $(SUB) $(GEN)
 	@sh $(GEN)
-	@echo 'Running ' + $(SUB) + ' script ...'
+	@echo 'Running ' $(SUB) ' script ...'
 	$(py) $(SUB)
 
 clean: $(SHELL)

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 3 genre directories
-text=(society.txt sports.txt goverment.txt)
+text=(society.txt sports.txt goverment.txt all_genre.txt)
 
 # all remove 3 genre text files
 rm -v *.txt

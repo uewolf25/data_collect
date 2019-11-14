@@ -7,15 +7,18 @@ import bs4
 import MeCab
 from collections import Counter
 import data_collect as dc
+import graph
 
-categories = dc.categories
-text_files = dc.text_files
+categories = ['sports', 'business', 'general', 'all']
+text_files = ['sports.txt', 'goverment.txt', 'society.txt', 'all_genre.txt']
 
 ###############################################
 ### HTML文書を目的の本文の部分のみスクレイピングし、###
 ### タグを消して１つの文字列とする。              ###
 ###############################################
 def html_parser():
+  # 全てのジャンルの記事を
+  all_genre_path = []
 
   for dir_name, text_list in zip(categories, text_files):
     # 各ファイルのパスを格納する
@@ -24,9 +27,19 @@ def html_parser():
 
     for local_file in all_files:
       file_path.append(os.path.join(dir_name, local_file))
-      
+      all_genre_path.append(os.path.join(dir_name, local_file))
+    
+    if dir_name == 'all':
+      article_get(all_genre_path, text_list)
+    else:
+      article_get(file_path, text_list)
+
+#############################################
+### ジャンル分ける場合とそうでない場合の場合分け ###
+#############################################
+def article_get(file_path, text_list):
     for local_file in file_path:
-      # print(dir_name + ' : ' + text)
+      text = []
       try:
         with open(local_file) as f:
           # pタグの部分だけ抜いてくる
@@ -92,9 +105,43 @@ def annalys_documents(file_text):
       if part_of_speech == "名詞":
         noun = word
         count_noun[noun] += 1
+
+  rank_and_freq(count_noun, file_text)
+
+#############################################
+### 単語の頻度を降順で並べたものに順位をつける。 ###
+#############################################
+def rank_and_freq(count_noun, file_text):
+
+  # 順位
+  rank_num = 1
+  # ループ総回数のカウンター
+  num = 1
+  # 最小値
+  min_num = 1000000
+  # グラフで使うための縦軸・横軸のリストをセット
+  rank_list = []
+  freq_list = []
+  
   # 名詞と出現回数を全部出力
   for key, count in count_noun.most_common():
-    print(key + " : " + str(count))
+
+    # 単語の出現回数が同じ場合、順位を同率にしておく #
+    if min_num == count: 
+      # print( "{0}位 {1} : {2}".format( rank_num, key, str(count) ) )
+      rank_list.append(rank_num)
+      freq_list.append(count)
+    # 出現回数が異なる場合は、裏でループ回数を数えていたnumから値を受け取り順位を更新 #
+    elif min_num > count:
+      min_num = count
+      rank_num = num
+      # print( "{0}位 {1} : {2}".format( rank_num, key, str(count) ) )
+      rank_list.append(rank_num)
+      freq_list.append(count)
+    
+    num += 1
+  graph.graph(rank_list, freq_list, file_text)
+  
 
 if __name__ == '__main__':
   html_parser()
