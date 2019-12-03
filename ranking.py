@@ -129,6 +129,7 @@ def rank_and_freq(count_noun, file_text):
     # 単語の出現回数が同じ場合、順位を同率にしておく #
     if min_num == count: 
       # print( "{0}位 {1} : {2}".format( rank_num, key, str(count) ) )
+      # print(str(count))
       rank_list.append(rank_num)
       freq_list.append(count)
     # 出現回数が異なる場合は、裏でループ回数を数えていたnumから値を受け取り順位を更新 #
@@ -136,10 +137,11 @@ def rank_and_freq(count_noun, file_text):
       min_num = count
       rank_num = num
       # print( "{0}位 {1} : {2}".format( rank_num, key, str(count) ) )
+      # print(str(count))
       rank_list.append(rank_num)
       freq_list.append(count)
-    
     num += 1
+
   graph.graph(rank_list, freq_list, file_text)
   
 

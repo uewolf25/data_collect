@@ -4,6 +4,10 @@ SUB = ranking.py
 DEL = delete.sh
 GEN = generate.sh
 
+all: $(SUB)
+	@echo 'Running ' $(SUB) ' script ...'
+	$(py) $(SUB)
+
 main: $(MAIN) $(SUB)
 	$(py) $(MAIN)
 	@echo '---------------------------------------------------------'

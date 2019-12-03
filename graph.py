@@ -21,14 +21,14 @@ def graph(x, y, name):
   fig, ax = plt.subplots()
   ax.plot(xx, yy, marker="o", color="red")
 
-  ax.set_xscale("log", basex=10, nonposx="mask")
-  ax.set_yscale("log")
+  # ax.set_xscale("log", basex=10, nonposx="mask")
+  # ax.set_yscale("log")
 
   fig.suptitle(name)
   print('figuring -> {0} ...'.format(name))
 
-  ax.set_xlabel("frequency")
-  ax.set_ylabel("ranking")
+  ax.set_xlabel("ranking")
+  ax.set_ylabel("frequency")
 
   # ax.set_xticks( np.linspace(0, 3, 7), minor=False )
   # ax.set_yticks( np.linspace(0, 3, 7), minor=False )
