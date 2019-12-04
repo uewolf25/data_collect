@@ -34,7 +34,8 @@ def print_data():
 ### wgetを使って文書をダウンロードする ###
 #####################################
 def load_html(data, dir_name):
-  os.chdir( path + '/' + dir_name)
+  # os.chdir( path + '/' + dir_name)
+  os.chdir( os.path.join(path, dir_name) )
   os.system('wget -E -H ' + data)
 
 ####################################
@@ -51,7 +52,7 @@ def update_files():
 ### 古いディレクトリを削除し、新しいディレクトリを生成する。 ###
 ######################################################
 def remove_old_folder(dir_name):
-  dir_path = path + '/' + dir_name
+  dir_path = os.path.join(path, dir_name)
   if os.path.exists(dir_path):
       os.system('rm -r ' + dir_name)
       print('Deleting old directory ... \t' + dir_name)

@@ -9,8 +9,7 @@ import matplotlib.pyplot as plt
 
 
 def graph(x, y, name):
-  xx = []
-  yy = []
+  xx, yy = [], []
 
   for a, b in zip(x, y):
     # print('{0} : {1}'.format(math.log10(a), math.log10(b)))

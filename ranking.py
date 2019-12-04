@@ -11,6 +11,7 @@ import graph
 
 categories = ['sports', 'business', 'general', 'all']
 text_files = ['sports.txt', 'goverment.txt', 'society.txt', 'all_genre.txt']
+text_folder = ['sports_text', 'business_text', 'general_text', 'all_text']
 
 ###############################################
 ### HTML文書を目的の本文の部分のみスクレイピングし、###
@@ -20,25 +21,31 @@ def html_parser():
   # 全てのジャンルの記事を
   all_genre_path = []
 
-  for dir_name, text_list in zip(categories, text_files):
+  for category_dir, text_file, text_dir in zip(categories, text_files, text_folder):
+
     # 各ファイルのパスを格納する
     file_path = []
-    all_files = os.listdir(dir_name)
+    # ディレクトリの中のファイル一覧を取得
+    all_files = os.listdir(category_dir)
 
     for local_file in all_files:
-      file_path.append(os.path.join(dir_name, local_file))
-      all_genre_path.append(os.path.join(dir_name, local_file))
-    
-    if dir_name == 'all':
-      article_get(all_genre_path, text_list)
-    else:
-      article_get(file_path, text_list)
+      file_path.append(os.path.join(category_dir, local_file))
+      # all_genre_path.append(os.path.join(category_dir, local_file))
 
-#############################################
-### ジャンル分ける場合とそうでない場合の場合分け ###
-#############################################
-def article_get(file_path, text_list):
-    for local_file in file_path:
+    article_get(file_path, category_dir, text_file, text_dir)
+    
+    # if dir_name == 'all':
+    #   article_get(all_genre_path, text_list)
+    # else:
+    #   article_get(file_path, text_list)
+
+#############################
+### HTML文書から文章を抜き出す ###
+#############################
+def article_get(file_path, category_dir, text_list, text_dir):
+
+  list_len = len( os.listdir(category_dir) )
+  for local_file, count in zip(file_path, range(1,list_len)):
       text = []
       try:
         with open(local_file) as f:
@@ -47,7 +54,7 @@ def article_get(file_path, text_list):
       except IOError:
         print('cannot be opened .')
       except UnicodeDecodeError:
-        print(local_file + ' is cannot be decoded')
+        print('{0} is not decoded . (fileNumber: {1})'.format(local_file, count) )
 
       for item in text:
         article = ''
@@ -55,8 +62,9 @@ def article_get(file_path, text_list):
         get_articles = str( item.get_text() )
         article += get_articles
         add_text(article, text_list)
+        add_text(article, connect_path(text_dir, local_file, count) )
     # 分析する
-    annalys_documents(text_list)
+    # annalys_documents(text_list)
 
 #####################################
 ### 取得した文書をテキストに追記していく ###
@@ -68,6 +76,15 @@ def add_text(str, text_file):
     print('cannot be opened .')
   else:
     f.write(str)
+
+
+#####################################
+###  ###
+#####################################
+def connect_path(dirs, file, number):
+  path = os.getcwd()
+  directory = dirs
+  return os.path.join( os.path.join(path, directory), directory + str(number) + '.txt' )
 
 #########################################################################
 ### Mecabを用いて、取得した文書を解析する。                                  ###
@@ -116,7 +133,7 @@ def rank_and_freq(count_noun, file_text):
   # 順位
   rank_num = 1
   # ループ総回数のカウンター
-  num = 1
+  counter = 1
   # 最小値
   min_num = 1000000
   # グラフで使うための縦軸・横軸のリストをセット
@@ -135,15 +152,17 @@ def rank_and_freq(count_noun, file_text):
     # 出現回数が異なる場合は、裏でループ回数を数えていたnumから値を受け取り順位を更新 #
     elif min_num > count:
       min_num = count
-      rank_num = num
+      rank_num = counter
       # print( "{0}位 {1} : {2}".format( rank_num, key, str(count) ) )
       # print(str(count))
       rank_list.append(rank_num)
       freq_list.append(count)
-    num += 1
+    counter += 1
 
   graph.graph(rank_list, freq_list, file_text)
   
 
 if __name__ == '__main__':
   html_parser()
+  # for text in ['sports.txt', 'goverment.txt', 'society.txt', 'all_genre.txt']:
+  #   annalys_documents(text)
