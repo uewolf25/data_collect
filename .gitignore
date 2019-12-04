@@ -9,11 +9,16 @@ key.pyc
 .DS_Store*
 
 # folder
-file/
 sports/
 general/
 business/
 all/
+
+sports_text/
+general_text/
+business_text/
+all_text/
+
 
 # text
 *.txt
@@ -23,4 +28,9 @@ mecab-0.996/
 mecab-ipadic-2.7.0-20070801/
 
 # dust box
-dust/
+_dust/
+
+# sample script
+Sample.py
+
+
