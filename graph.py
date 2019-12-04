@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def graph(x, y, name):
+def graph(x: list, y: list, name: str) -> None:
   xx, yy = [], []
 
   for a, b in zip(x, y):

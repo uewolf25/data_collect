@@ -13,11 +13,12 @@ categories = ['sports', 'business', 'general', 'all']
 text_files = ['sports.txt', 'goverment.txt', 'society.txt', 'all_genre.txt']
 text_folder = ['sports_text', 'business_text', 'general_text', 'all_text']
 
-###############################################
-### HTML文書を目的の本文の部分のみスクレイピングし、###
-### タグを消して１つの文字列とする。              ###
-###############################################
-def html_parser():
+
+def html_parser() -> None:
+  '''
+  HTML文書を目的の本文の部分のみスクレイピングし、
+  タグを消して１つの文字列とする。              
+  '''
   # 全てのジャンルの記事を
   all_genre_path = []
 
@@ -39,10 +40,16 @@ def html_parser():
     # else:
     #   article_get(file_path, text_list)
 
-#############################
-### HTML文書から文章を抜き出す ###
-#############################
-def article_get(file_path, category_dir, text_list, text_dir):
+
+def article_get(
+  file_path: str, 
+  category_dir: str, 
+  text_list: str, 
+  text_dir: str
+  ) -> None:
+  '''
+  HTML文書から文章を抜き出す。
+  '''
 
   list_len = len( os.listdir(category_dir) )
   for local_file, count in zip(file_path, range(1,list_len)):
@@ -63,13 +70,12 @@ def article_get(file_path, category_dir, text_list, text_dir):
         article += get_articles
         add_text(article, text_list)
         add_text(article, connect_path(text_dir, local_file, count) )
-    # 分析する
-    # annalys_documents(text_list)
+  
 
-#####################################
-### 取得した文書をテキストに追記していく ###
-#####################################
-def add_text(str, text_file):
+def add_text(str: str, text_file: str) -> None:
+  '''
+  取得した文書をテキストに追記していく。
+  '''
   try:  
     f = open(text_file, 'a')
   except IOError:
@@ -78,21 +84,21 @@ def add_text(str, text_file):
     f.write(str)
 
 
-#####################################
-###  ###
-#####################################
-def connect_path(dirs, file, number):
+def connect_path(dirs: str, file: str, number: int) -> str:
+  '''
+  ジャンルごとにそれぞれファイルの名前をつける。
+  '''
   path = os.getcwd()
   directory = dirs
   return os.path.join( os.path.join(path, directory), directory + str(number) + '.txt' )
 
-#########################################################################
-### Mecabを用いて、取得した文書を解析する。                                  ###
-### 表層形  品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用型,活用形,原形,読み,発音 ###
-#########################################################################
-def annalys_documents(file_text):
-  # 名詞収集
-  noun = ''
+
+def annalys_documents(file_text: str) -> list:
+  '''
+  Mecabを用いて、取得した文書を解析する。
+
+  表層形  品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用型,活用形,原形,読み,発音
+  '''
   # ファイルから読み込んだ文字列を格納
   text = ''
   count_noun = Counter()
@@ -120,15 +126,14 @@ def annalys_documents(file_text):
       part_of_speech = words_list[:2]
       # 前から２文字目でスライスして「名詞」に合致するか判別
       if part_of_speech == "名詞":
-        noun = word
-        count_noun[noun] += 1
+        count_noun[word] += 1
+  return count_noun
 
-  rank_and_freq(count_noun, file_text)
 
-#############################################
-### 単語の頻度を降順で並べたものに順位をつける。 ###
-#############################################
-def rank_and_freq(count_noun, file_text):
+def rank_and_freq(count_noun: list, file_text: str) -> None:
+  '''
+  単語の頻度を降順で並べたものに順位をつける。
+  '''
 
   # 順位
   rank_num = 1
@@ -164,5 +169,5 @@ def rank_and_freq(count_noun, file_text):
 
 if __name__ == '__main__':
   html_parser()
-  # for text in ['sports.txt', 'goverment.txt', 'society.txt', 'all_genre.txt']:
-  #   annalys_documents(text)
+  for text in text_files:
+    rank_and_freq( annalys_documents(text) , text)
