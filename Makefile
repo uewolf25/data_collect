@@ -2,9 +2,11 @@ py = python3
 MAIN = data_collect.py
 SUB = ranking.py
 DEL = delete.sh
-GEN = generate.sh
+# GEN = generate.sh
 
-all: $(SUB)
+all: $(SUB) $(DEL)
+	@echo 'Deleting text files ...'
+	@sh $(DEL)
 	@echo 'Running ' $(SUB) ' script ...'
 	$(py) $(SUB)
 
@@ -16,15 +18,15 @@ main: $(MAIN) $(SUB)
 install: $(MAIN)
 	$(py) $(MAIN)
 
-run: $(SUB) $(GEN)
-	@sh $(GEN)
-	@echo 'Running ' $(SUB) ' script ...'
-	$(py) $(SUB)
+# run: $(SUB) $(GEN)
+# 	@sh $(GEN)
+# 	@echo 'Running ' $(SUB) ' script ...'
+# 	$(py) $(SUB)
 
-clean: $(SHELL)
+clean: $(DEL)
 	@echo 'Deleting directories and text files ...'
 	@sh $(DEL)
 
-reset-txt: $(GEN)
-	@echo 'resetting only text files ...'
-	@sh $(GEN)
+# reset-txt: $(GEN)
+# 	@echo 'resetting only text files ...'
+# 	@sh $(GEN)

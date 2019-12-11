@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 3 genre directories
-directory=(general sports business all)
+# directory=(general sports business all)
 
 # all remove 3 genre text files
 rm -v *.txt
@@ -9,11 +9,11 @@ rm -v *.txt
 echo "---------------------------------------------------------"
 
 # all remove dir
-for dir in ${directory[@]}
-do
-	rm -r -v $dir
+# for dir in ${directory[@]}
+# do
+	# rm -r -v $dir
 	# echo  $dir
-done
+# done
 
 exit 0
 

@@ -95,7 +95,7 @@ def connect_path(dirs: str, file: str, number: int) -> str:
 
 def annalys_documents(file_text: str) -> list:
   '''
-  Mecabを用いて、取得した文書を解析する。
+  Mecabを用いて、取得した文書を解析する。\n
 
   表層形  品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用型,活用形,原形,読み,発音
   '''
