@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-import os.path
+import os, os.path
+from natsort import natsorted
 import bs4 
 import MeCab
 from collections import Counter
@@ -27,7 +27,7 @@ def html_parser() -> None:
     # 各ファイルのパスを格納する
     file_path = []
     # ディレクトリの中のファイル一覧を取得
-    all_files = os.listdir(category_dir)
+    all_files = natsorted( os.listdir(category_dir) )
 
     for local_file in all_files:
       file_path.append(os.path.join(category_dir, local_file))
@@ -52,7 +52,7 @@ def article_get(
   '''
 
   list_len = len( os.listdir(category_dir) )
-  for local_file, count in zip(file_path, range(1,list_len)):
+  for local_file, count in zip(file_path, range(1,list_len+1)): #+1
       text = []
       try:
         with open(local_file) as f:
