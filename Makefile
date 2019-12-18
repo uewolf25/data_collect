@@ -2,7 +2,16 @@ py = python3
 MAIN = data_collect.py
 SUB = ranking.py
 DEL = delete.sh
+TFIDF = tf_idf.py
 # GEN = generate.sh
+
+tfidf: $(TFIDF)
+	@echo 'calculation tf-idf ...'
+	@$(py) $(TFIDF)
+
+rank: $(SUB)
+	@echo ''
+	@$(py) $(SUB)
 
 all: $(SUB) $(DEL)
 	@echo 'Deleting text files ...'
