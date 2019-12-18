@@ -3,6 +3,7 @@
 
 import os, os.path
 import sys
+from natsort import natsorted
 import MeCab
 from collections import Counter
 import ranking
@@ -13,6 +14,7 @@ categories_text_dir = ['sports_text', 'business_text', 'general_text']
 
 # 各文書の名詞を格納する
 sports_list, business_list, general_list = [], [], []
+
 
 def data_set(text_file: str) -> list:
   '''
@@ -29,7 +31,7 @@ def data_set(text_file: str) -> list:
   except IOError:
     print('cannot be opend .')
   except UnicodeDecodeError:
-      print('{0} is not decoded .'.format(text_file) )
+    print('{0} is not decoded .'.format(text_file) )
   else:
     text = f.read()
     f.close()
@@ -54,44 +56,83 @@ def data_set(text_file: str) -> list:
   # print( noun_list )
   return noun_list
 
-def text_set() -> None:
-  '''
-  全ジャンルの文書をそれぞれ格納していく。
-  '''
+# def text_all_set() -> None:
+#   '''
+#   全ジャンルの文書をそれぞれ格納していく。
+#   '''
 
-  for cate_text_dir, cate_dir in zip(categories_text_dir, [sports_list, business_list, general_list]):
-    files = os.listdir(cate_text_dir) # リストでファイル名が格納されている。
-    for each_file in files:
-      file_path = os.path.join( cate_text_dir, each_file )
-      data_list = data_set(file_path)
-      # print(file_path)
-      cate_dir.append(data_list)
-    # print(cate_dir)
+#   for cate_text_dir, cate_dir in zip(categories_text_dir, [sports_list, business_list, general_list]):
+#     files = natsorted( os.listdir(cate_text_dir) ) # リストでファイル名が数字順に格納されている。
+#     for each_file in files:
+#       file_path = os.path.join( cate_text_dir, each_file )
+#       # print( file_path )
+#       data_list = data_set(file_path)
+#       cate_dir.append(data_list)
 
-def calc() -> None:
+
+def text_set(genre: str) -> None:
+  # genre_dir = sports_list
+  files = natsorted( os.listdir('sports_text') )
+  for each_file in files:
+    file_path = os.path.join( 'sports_text' , each_file )
+    # print(file_path)
+    data_list = data_set(file_path)
+    # print(data_list)
+    sports_list.append(data_list)
+  # print(sports_list[0])
+  # print(len(sports_list))
+
+
+def calc(genre: str, string: str) -> None:
   '''
   実際にtf-idfを計算する関数
+  ToDo:リストに格納されているものの重複をset()で消す
   '''
-  # tf()
+  # tf値を格納する用のリスト
+  tf_list = []
+  # 1ジャンルの全ファイル数(100つ)
+  file_name = natsorted( os.listdir(genre) )
+  file_number = len( file_name )
+
+  for word, name in zip(sports_list, file_name):
+    word_length = len(word)
+    # print('ファイル名：{0}\t単語数：{1}'.format(name, word_length))
+    devided_word_list = word
+    purpose_word = devided_word_list.count(string)
+    tf_value = purpose_word / word_length
+    tf_list.append(tf_value)
+    # print(' 選んだ単語 -> \'{0}\'\t 出現頻度：{1}回 \n tf値は{2}\n'.format(string, purpose_word, tf_value) )
+    # print('------------------------------------------------------------')
+  print(tf_list)
+
+  # tf(file_number, string, genre)
   # idf()
   # tf_idf()
-  pass
 
 
 
-def tf():
+def tf(number: int, word: str, genre: str):
   '''
   １つのファイル内にある単語がどれだけ含まれているか。\n
-  ・tf = ある単語の出現数 / 文章全体の単語数
+  ・tf = ある単語の出現数(word_freq) / １つのファイルの全体の単語数(all_words)
   '''
-  pass
+  word_freq = number
+  genre_list = [text for text in sports_list]
+  all_words = len(genre_list)
+  print( len(sports_list), all_words )
 
-def idf():
+  for file_path in genre_list:
+    values = 1
+    print( 'ファイル名：{0}\ttf値：{1}'.format(file_path, values) )
+
+
+def idf(select_list: list):
   '''
   全ファイル(100個)にある単語が何個のファイルに含まれているか。\n
   ・idf = log( 全ファイル数 / ある単語が出現したファイル数 )
   '''
-  pass
+  genre_list = set(select_list)
+
 
 def tf_idf(tf: int, idf: int) -> int:
   '''
@@ -99,6 +140,7 @@ def tf_idf(tf: int, idf: int) -> int:
   tf * idf
   '''
   pass
+
 
 def input_check(string: str) -> str:
   '''
@@ -123,7 +165,10 @@ if __name__ == '__main__':
     'select genre or number >>> '
     )
   genre = input_check(input_genre)
-  string = input('input words >>> ')
-  # text_set()
-  # calc()
+  # string = input('input words >>> ')
+
+  text_set(genre)
+  # calc(genre, string)
+  calc('sports_text', '日')
+  # text_all_set()
   # print( data_set('/Users/wolf25/programing/data_collect/all_text/all_text1.txt') )
