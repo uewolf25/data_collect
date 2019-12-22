@@ -3,6 +3,7 @@
 
 import os, os.path
 import sys
+import math
 from natsort import natsorted
 import MeCab
 from collections import Counter
@@ -88,30 +89,40 @@ def calc(genre: str, string: str) -> None:
   実際にtf-idfを計算する関数
   ToDo:リストに格納されているものの重複をset()で消す
   '''
-  # tf値,idf値を格納する用のリスト
-  tf_list, idf_list = [], []
+  # tf値を格納する用のリスト
+  tf_list = []
   # 1ジャンルの全ファイル数(100つ)
   file_name = natsorted( os.listdir(genre) )
   file_number = len( file_name )
 
-  word_counter = 0
+  idf_value = 0
+  # リストに格納されているファイル内の単語と名前を一緒に回す
   for word, name in zip(sports_list, file_name):
+    # 単語数
     word_length = len(word)
-    print('ファイル名：{0}\t単語数：{1}'.format(name, word_length))
+    # print('ファイル名：{0}\t単語数：{1}'.format(name, word_length))
+    # １ファイル内の単語群(リスト)
     devided_word_list = word
-    # 何個のファイルに出現したか（idfのため）
-    if string in devided_word_list:
-      word_counter += 1
-    # １つのファイルに何個出現したか（tfのため）
+
+    # １つのファイルに何回出現したか
     purpose_word = devided_word_list.count(string)
-    # それぞれの値の計算
-    tf_value = purpose_word / word_length
-    idf_value = file_number / word_counter
+    # 何個のファイルに出現したか（idfのため）
+    if string in set(devided_word_list):
+      idf_value += 1
+
+    purpose_word += 1
+    try:
+      # tf値の計算
+      tf_value = purpose_word / word_length
+    except ZeroDivisionError:
+      print('Cannot devide by zero .')
+
     tf_list.append(tf_value)
-    idf_list.append(idf_value)
-    print(' 出現頻度：{1}回 \n tf値は{2}\n idf値は{3}'.format(string, purpose_word, tf_value, idf_value) )
+    # print(' 出現頻度：{0}回 \n tf値は{1}\n idf値は{2}'.format(purpose_word, tf_value, idf_value) )
     # print('------------------------------------------------------------')
-  tf_idf(file_name, tf_list, idf_list)
+  idf_value = idf(file_number, idf_value+1)
+  tf_idf(file_name, tf_list, idf_value)
+  print(idf_value)
 
 
 def tf(number: int, word: str, genre: str):
@@ -119,35 +130,29 @@ def tf(number: int, word: str, genre: str):
   １つのファイル内にある単語がどれだけ含まれているか。\n
   ・tf = ある単語の出現数(word_freq) / １つのファイルの全体の単語数(all_words)
   '''
-  word_freq = number
-  genre_list = [text for text in sports_list]
-  all_words = len(genre_list)
-  print( len(sports_list), all_words )
-
-  for file_path in genre_list:
-    values = 1
-    print( 'ファイル名：{0}\ttf値：{1}'.format(file_path, values) )
+  pass
 
 
-def idf(select_list: list):
+def idf(file_number: int, value: int):
   '''
   全ファイル(100個)にある単語が何個のファイルに含まれているか。\n
   ・idf = log( 全ファイル数 / ある単語が出現したファイル数 )
   '''
-  genre_list = set(select_list)
+  # print('{0} / {1}'.format(file_number, value) )
+  return math.log( file_number / value )
+  
 
 
-def tf_idf(file_name: str, tf_list: list, idf_list: list) -> None:
+def tf_idf(file_name: str, tf_list: list, idf: int) -> None:
   '''
   tfとidfをかけた値。
   tf * idf
   '''
   tf_idf_list = []
-  for name, tf, idf in zip(file_name, tf_list, idf_list):
+  for name, tf in zip(file_name, tf_list):
     tf_idf_value = tf * idf
-    print( 'ファイル名：{0}\n tf-idf値：{1}\n'.format(name, tf_idf_value) )
+    print( 'ファイル名：{0}\n tf値：{1}\tidf値：{2}\ntf-idf値：{3}\n'.format(name, tf, idf, tf_idf_value) )
     tf_idf_list.append( tf_idf_value )
-  # return tf_idf_list
 
 
 def input_check(string: str) -> str:
@@ -155,11 +160,11 @@ def input_check(string: str) -> str:
   入力されたジャンルが存在するかの判定。
   '''
   if string == 'sports' or string == '1':
-    return 'sports'
+    return 'sports', 'sports_text'
   elif string == 'goverment' or string == '2':
-    return 'business'
+    return 'business', 'business_text'
   elif string == 'society' or string == '3':
-    return 'general'
+    return 'general', 'general_text'
   else:
     print('選択されたジャンルが存在しません。\nプログラムを終了します。')
     sys.exit()
@@ -172,10 +177,10 @@ if __name__ == '__main__':
     '3. society\n\n'
     'select genre or number >>> '
     )
-  genre = input_check(input_genre)
+  genre, genre_text = input_check(input_genre)
   string = input('input words >>> ')
 
   text_set(genre)
-  # calc(genre, string)
-  calc('sports_text', string)
+  calc(genre, string)
+  # calc(genre_text, '野球')
   # text_all_set()
