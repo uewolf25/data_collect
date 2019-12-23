@@ -30,7 +30,9 @@ mecab-ipadic-2.7.0-20070801/
 # dust box
 _dust/
 
-# sample script
-Sample.py
+# src(source folder)
+src/__pycache__
+src/sample.py
+
 
 
