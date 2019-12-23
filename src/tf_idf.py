@@ -73,9 +73,9 @@ def data_set(text_file: str) -> list:
 
 def text_set(genre: str) -> None:
   # genre_dir = sports_list
-  files = natsorted( os.listdir('sports_text') )
+  files = natsorted( os.listdir('../sports_text') )
   for each_file in files:
-    file_path = os.path.join( 'sports_text' , each_file )
+    file_path = os.path.join( '../sports_text' , each_file )
     # print(file_path)
     data_list = data_set(file_path)
     # print(data_list)
@@ -156,11 +156,11 @@ def input_check(string: str) -> str:
   入力されたジャンルが存在するかの判定。
   '''
   if string == 'sports' or string == '1':
-    return 'sports', 'sports_text'
+    return 'sports', '../sports_text'
   elif string == 'goverment' or string == '2':
-    return 'business', 'business_text'
+    return 'business', '../business_text'
   elif string == 'society' or string == '3':
-    return 'general', 'general_text'
+    return 'general', '../general_text'
   else:
     print('選択されたジャンルが存在しません。\nプログラムを終了します。')
     sys.exit()
@@ -177,6 +177,6 @@ if __name__ == '__main__':
   string = input('input words >>> ')
 
   text_set(genre)
-  calc(genre, string)
-  # calc(genre_text, '野球')
+  # calc(genre_text, string)
+  calc(genre_text, '野球')
   # text_all_set()

@@ -10,7 +10,7 @@ from time import sleep
 API_KEY = key.KEY
 
 categories = ['sports', 'business', 'general']
-text_files = ['sports.txt', 'goverment.txt', 'society.txt']
+text_files = ['../sports.txt', '../goverment.txt', '../society.txt']
 path = os.getcwd()
 
 

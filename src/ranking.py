@@ -10,8 +10,8 @@ import data_collect as dc
 import graph
 
 categories = ['sports', 'business', 'general', 'all']
-text_files = ['sports.txt', 'goverment.txt', 'society.txt', 'all_genre.txt']
-text_folder = ['sports_text', 'business_text', 'general_text', 'all_text']
+text_files = ['../sports.txt', '../goverment.txt', '../society.txt', '../all_genre.txt']
+text_folder = ['../sports_text', '../business_text', '../general_text', '../all_text']
 
 
 def html_parser() -> None:
