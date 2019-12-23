@@ -80,8 +80,6 @@ def text_set(genre: str) -> None:
     data_list = data_set(file_path)
     # print(data_list)
     sports_list.append(data_list)
-  # print(sports_list[0])
-  # print(len(sports_list))
 
 
 def calc(genre: str, string: str) -> None:
@@ -95,42 +93,40 @@ def calc(genre: str, string: str) -> None:
   file_name = natsorted( os.listdir(genre) )
   file_number = len( file_name )
 
-  idf_value = 0
+  idf_value_count = 0
   # リストに格納されているファイル内の単語と名前を一緒に回す
   for word, name in zip(sports_list, file_name):
     # 単語数
     word_length = len(word)
-    # print('ファイル名：{0}\t単語数：{1}'.format(name, word_length))
     # １ファイル内の単語群(リスト)
     devided_word_list = word
 
-    # １つのファイルに何回出現したか
-    purpose_word = devided_word_list.count(string)
     # 何個のファイルに出現したか（idfのため）
     if string in set(devided_word_list):
-      idf_value += 1
+      idf_value_count += 1
+    
+    # tf値の計算
+    tf(word_length, string, devided_word_list, tf_list)
 
-    purpose_word += 1
-    try:
-      # tf値の計算
-      tf_value = purpose_word / word_length
-    except ZeroDivisionError:
-      print('Cannot devide by zero .')
-
-    tf_list.append(tf_value)
-    # print(' 出現頻度：{0}回 \n tf値は{1}\n idf値は{2}'.format(purpose_word, tf_value, idf_value) )
-    # print('------------------------------------------------------------')
-  idf_value = idf(file_number, idf_value+1)
+  idf_value = idf(file_number, idf_value_count+1)
   tf_idf(file_name, tf_list, idf_value)
-  print(idf_value)
 
 
-def tf(number: int, word: str, genre: str):
+def tf(all_words: int, target_word: str, word_list: list, tf_list: list):
   '''
   １つのファイル内にある単語がどれだけ含まれているか。\n
   ・tf = ある単語の出現数(word_freq) / １つのファイルの全体の単語数(all_words)
   '''
-  pass
+  # １つのファイルに何回出現したか
+  word_freq = word_list.count(target_word)
+  word_freq += 1
+  # print('ファイル名：{0}\t単語数：{1}'.format(file_name, all_words))
+  try:
+    # tf値の計算
+    tf_value = word_freq / all_words
+  except ZeroDivisionError:
+    print('Cannot devide by zero .')
+  tf_list.append(tf_value)
 
 
 def idf(file_number: int, value: int):
