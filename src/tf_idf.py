@@ -155,11 +155,13 @@ def value_sort(names: list, values: list, string: str):
 
   # ソート
   sorted_values = sorted(name_and_value_dictonary.items(), key=lambda value:value[1], reverse=True)
+  # 出力するファイル名
+  text_file = '../ranking_tfidf_value_' + string + '.txt'
   for key, value in sorted_values:
     # print(key + ' :\t' + str(value))
     #　テキストに書き込み
     try:
-      f = open('../ranking_tfidf_value.txt', 'a')
+      f = open(text_file, 'a')
     except IOError:
       print('cannot be opened .')
     else:
