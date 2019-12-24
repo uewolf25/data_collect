@@ -36,8 +36,6 @@ def data_set(text_file: str) -> list:
   else:
     text = f.read()
     f.close()
-  # finally:
-  #   print('---------------------------------------')
 
   tagger = MeCab.Tagger()
   annalys_text = tagger.parse(text)
@@ -52,26 +50,16 @@ def data_set(text_file: str) -> list:
       words_list = words.split("\t")[1]
       part_of_speech = words_list[:2]
       # 前から２文字目でスライスして「名詞」に合致するか判別
-      if part_of_speech == "名詞":# and not word in noun_list:
+      if part_of_speech == "名詞":
         noun_list.append(word)
-  # print( noun_list )
   return noun_list
 
-# def text_all_set() -> None:
-#   '''
-#   全ジャンルの文書をそれぞれ格納していく。
-#   '''
-
-#   for cate_text_dir, cate_dir in zip(categories_text_dir, [sports_list, business_list, general_list]):
-#     files = natsorted( os.listdir(cate_text_dir) ) # リストでファイル名が数字順に格納されている。
-#     for each_file in files:
-#       file_path = os.path.join( cate_text_dir, each_file )
-#       # print( file_path )
-#       data_list = data_set(file_path)
-#       cate_dir.append(data_list)
 
 
 def text_set(genre: str) -> None:
+  '''
+  与えられた引数(ジャンル)の単語軍をリストに格納する。
+  '''
   # genre_dir = sports_list
   files = natsorted( os.listdir('../sports_text') )
   for each_file in files:
@@ -109,7 +97,9 @@ def calc(genre: str, string: str) -> None:
     tf(word_length, string, devided_word_list, tf_list)
 
   idf_value = idf(file_number, idf_value_count+1)
-  tf_idf(file_name, tf_list, idf_value)
+  name, value = tf_idf(file_name, tf_list, idf_value)
+  value_sort( name, value, string )
+    
 
 
 def tf(all_words: int, target_word: str, word_list: list, tf_list: list):
@@ -129,12 +119,12 @@ def tf(all_words: int, target_word: str, word_list: list, tf_list: list):
   tf_list.append(tf_value)
 
 
+
 def idf(file_number: int, value: int):
   '''
   全ファイル(100個)にある単語が何個のファイルに含まれているか。\n
   ・idf = log( 全ファイル数 / ある単語が出現したファイル数 )
   '''
-  # print('{0} / {1}'.format(file_number, value) )
   return math.log( file_number / value )
   
 
@@ -144,11 +134,39 @@ def tf_idf(file_name: str, tf_list: list, idf: int) -> None:
   tfとidfをかけた値。
   tf * idf
   '''
-  tf_idf_list = []
+  tf_idf_list, file_name_list = [], []
   for name, tf in zip(file_name, tf_list):
     tf_idf_value = tf * idf
-    print( 'ファイル名：{0}\n tf値：{1}\tidf値：{2}\ntf-idf値：{3}\n'.format(name, tf, idf, tf_idf_value) )
+    # print( 'ファイル名：{0}\n tf値：{1}\tidf値：{2}\ntf-idf値：{3}\n'.format(name, tf, idf, tf_idf_value) )
+    file_name_list.append( name )
     tf_idf_list.append( tf_idf_value )
+  return file_name_list, tf_idf_list
+
+
+def value_sort(names: list, values: list, string: str):
+  '''
+  辞書型でファイル名とtf-idf値を紐付け、昇順にソートする。\n
+  ソートしたものをテキストに書き込む。
+  '''
+  # ソートするための辞書
+  name_and_value_dictonary = {}
+  for name, value in zip(names, values):
+    name_and_value_dictonary[name] = value
+
+  # ソート
+  sorted_values = sorted(name_and_value_dictonary.items(), key=lambda value:value[1], reverse=True)
+  for key, value in sorted_values:
+    # print(key + ' :\t' + str(value))
+    #　テキストに書き込み
+    try:
+      f = open('../ranking_tfidf_value.txt', 'a')
+    except IOError:
+      print('cannot be opened .')
+    else:
+      f.write('{0}:\t{1}\n\n'.format( key, str(value) ))
+      f.close()
+  print('Add ranking file .')
+
 
 
 def input_check(string: str) -> str:
@@ -177,6 +195,5 @@ if __name__ == '__main__':
   string = input('input words >>> ')
 
   text_set(genre)
-  # calc(genre_text, string)
-  calc(genre_text, '野球')
+  calc(genre_text, string)
   # text_all_set()
