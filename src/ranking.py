@@ -82,6 +82,7 @@ def add_text(str: str, text_file: str) -> None:
     print('cannot be opened .')
   else:
     f.write(str)
+    f.close()
 
 
 def connect_path(dirs: str, file: str, number: int) -> str:
@@ -168,6 +169,6 @@ def rank_and_freq(count_noun: list, file_text: str) -> None:
   
 
 if __name__ == '__main__':
-  html_parser()
+  # html_parser()
   for text in text_files:
     rank_and_freq( annalys_documents(text) , text)
