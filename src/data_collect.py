@@ -65,6 +65,7 @@ class DataCollect():
 
 
 if __name__ == '__main__':
-  DataCollect().update_files()
-  DataCollect().print_data()
+  data_collect = DataCollect()
+  data_collect.update_files()
+  data_collect.print_data()
 
