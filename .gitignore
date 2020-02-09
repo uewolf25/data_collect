@@ -32,6 +32,5 @@ _dust/
 
 # src(source folder)
 src/__pycache__
-src/sample.py
 src/*.txt
 
