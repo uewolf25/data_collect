@@ -69,3 +69,9 @@ if __name__ == '__main__':
   data_collect.update_files()
   data_collect.print_data()
 
+# categories = []
+#   print("Please press \'end\' if you finished entering . ")
+#   while True:
+#     category = input("Select categories ...")
+#     if category == 'end': break
+    # categories.append(category)
