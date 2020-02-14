@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''
+与えられた２つのリストから二次元座標にプロットし、グラフを作成するモジュール
+'''
+
 import os
 import os.path
 import math
