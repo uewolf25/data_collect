@@ -8,23 +8,19 @@ from time import sleep
 import pathlib
 
 import key  #APIキー取得
-import variable # リストを取得
-import initialize
+import file_path
 
 # APIキー
 API_KEY = key.KEY
 
-# ジャンルのカテゴリ
-# categories = variable.categories
-categories = ['sports', 'business', 'general']
-text_files = variable.text_files
 
 class DataCollect():
-  def __init__(self, path_object):
+  def __init__(self, genre: str, path_object: file_path):
     '''
     コンストラクタ
     '''
-    self.path = path_object.get_main_dir_path()
+    self.__genre = genre
+    self.__path = path_object
 
 
   def print_data(self) -> None:
@@ -34,17 +30,16 @@ class DataCollect():
     # クライアントを初期化
     newsapi = NewsApiClient(api_key=API_KEY)
 
-    for category in categories:
-      for number in range(1,6):
-        headlines = newsapi.get_top_headlines(country='jp', category=category, page=number)
-        ganre_path = os.path.join(self.path, category)
-        # print(ganre_path)
-        if self.is_file_count(ganre_path): break
+    for number in range(1,6):
+      headlines = newsapi.get_top_headlines(country='jp', category=self.__genre, page=number)
+      ganre_path = self.__path.get_category_dir_path()
+      # print(ganre_path)
+      if self.is_file_count(ganre_path): break
 
-        for data in headlines["articles"]:
-          data_url = data["url"]
-          self.load_html(data_url, ganre_path)
-          sleep(3)
+      for data in headlines["articles"]:
+        data_url = data["url"]
+        self.load_html(data_url, ganre_path)
+        sleep(3)
 
 
   def load_html(self, data: str, dir_name: str) -> None:
@@ -65,16 +60,13 @@ class DataCollect():
 
 
 if __name__ == '__main__':
+  genre = 'sports'
   # ファイル・ディレクトリの初期化
-  init_object = initialize.Initialize()
-  init_object.create_category_dir()
+  file_control_class = file_path.FilePath(genre)
+  file_control_class.create_category_dir()
+  file_control_class.create_category_text_dir()
+  file_control_class.create_category_text_file()
+  
   # メインクラス実行
-  data_collect = DataCollect(init_object)
+  data_collect = DataCollect(genre, file_control_class)
   data_collect.print_data()
-
-# categories = []
-#   print("Please press \'end\' if you finished entering . ")
-#   while True:
-#     category = input("Select categories ...")
-#     if category == 'end': break
-    # categories.append(category)
