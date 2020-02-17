@@ -53,7 +53,7 @@ class Ranking():
     return count_noun
 
 
-  def rank_and_freq(self, count_noun: list, file_text: str) -> None:
+  def rank_and_freq(self, count_noun: list) -> None:
     '''
     単語の頻度を降順で並べたものに順位をつける。
     '''
@@ -90,6 +90,6 @@ class Ranking():
     graph.graph(rank_list, freq_list, self.__text_file_path)
   
 
-if __name__ == '__main__':
-  ranking = Ranking("sports")
-  ranking.rank_and_freq( ranking.annalys_documents() )
+# if __name__ == '__main__':
+#   ranking = Ranking("sports")
+#   ranking.rank_and_freq( ranking.annalys_documents() )

@@ -15,7 +15,7 @@ class ReadWrite():
     try:
       f = open(text_file, 'r', encoding='utf8', errors='ignore')
     except IOError:
-      print('cannot be opend .')
+      print('{} is cannot be opend .'.format(text_file))
     except UnicodeDecodeError:
       print('{0} is not decoded .'.format(text_file) )
     else:
@@ -25,6 +25,7 @@ class ReadWrite():
     #   print('---------------------------------------')
     return text
 
+
   def write_text(self, string: str, text_file: str) -> None:
     '''
     文書をテキストに追記していく。
@@ -32,7 +33,7 @@ class ReadWrite():
     try:  
       f = open(text_file, 'a')
     except IOError:
-      print('cannot be opened .')
+      print('{} is cannot be opened .'.format(text_file))
     else:
       f.write(string)
       f.close()

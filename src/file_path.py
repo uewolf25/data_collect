@@ -3,11 +3,12 @@
 
 import os
 import os.path
+import shutil
 import pathlib
 
 class FilePath():
 
-  def __init__(self, genre):
+  def __init__(self, genre: str):
     '''
     コンストラクタ
     '''
@@ -41,7 +42,7 @@ class FilePath():
     '''
     選択されたジャンルの解析済みのまとめたテキストファイルのファイルパスを取得。
     '''
-    return os.path.join( self.__parent_path, self.__genre_dir ) # ~~/data_collect/ジャンル.txt
+    return os.path.join( self.__parent_path, self.__text_file ) # ~~/data_collect/ジャンル.txt
 
   def get_each_text_file_name(self, num: int):
     '''
@@ -65,15 +66,21 @@ class FilePath():
   def create_category_text_dir(self):
     '''
     落とした文書を解析した１つ１つのテキストを格納するディレクトリの作成。
+    複数回実行する度にテキストファイル群が上書きされてしまうので、一度消してから作成する。
     '''
     dir_path = os.path.join(self.__parent_path, self.__genre_dir)
     if not os.path.exists(dir_path):
       os.system('mkdir ' + dir_path)
+    else:
+      shutil.rmtree(dir_path)
 
   def create_category_text_file(self):
     '''
     選択されたジャンルの解析済みのまとめたテキストファイルの作成。
+    複数回実行する度にテキストファイルが上書きされてしまうので、一度消してから作成する。
     '''
     text_path = os.path.join(self.__parent_path, self.__text_file)
     if not os.path.exists(text_path):
       os.system('touch ' + text_path)
+    else:
+      os.remove(text_path)
