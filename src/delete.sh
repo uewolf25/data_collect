@@ -1,19 +1,9 @@
 #!/bin/bash
 
-# 3 genre directories
-# directory=(general sports business all)
+echo "--------------------------- Reset directory ------------------------------"
 
-# all remove 3 genre text files
-rm -v *.txt
+# remove dir
+rm -r -v ../mix_genre
 
-echo "---------------------------------------------------------"
-
-# all remove dir
-# for dir in ${directory[@]}
-# do
-	# rm -r -v $dir
-	# echo  $dir
-# done
-
+echo "-------------------------------- Done -----------------------------------"
 exit 0
-
