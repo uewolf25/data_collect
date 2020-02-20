@@ -36,7 +36,7 @@ class Scraping():
     category_files_path: HTML文書の絶対パス
     '''
     list_len = len( os.listdir( self.__file_path.get_category_dir_path() ) )
-    for html_file, count in zip(category_files_path, range(1,list_len+1)): #+1
+    for html_file, count in zip(category_files_path, range(1,list_len+1)):
       text = []
       try:
         with open(html_file) as f:
@@ -56,7 +56,5 @@ class Scraping():
         self.__read_and_write.write_text( article, self.__file_path.get_category_textfile_path() )
         # １つ１つのテキストに書き込む
         self.__read_and_write.write_text( article, self.__file_path.get_each_text_file_name(count) )
-
-# if __name__ == '__main__':
-#   scap = Scraping('sports')
-#   scap.set_file_list()
+        # １つ１つのテキストに書き込む(ジャンル区別無し)
+        self.__read_and_write.write_text( article, self.__file_path.get_mix_each_text_file_name(count) )

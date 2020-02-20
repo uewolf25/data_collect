@@ -38,6 +38,12 @@ class FilePath():
     '''
     return os.path.join( self.__parent_path, self.__genre_dir ) # ~~/data_collect/ジャンル_text/
 
+  def get_mix_category_dir(self):
+    '''
+    ジャンル１００件分を解析したテキストがあるジャンル区別無しのディレクトリの取得。
+    '''
+    return os.path.join( self.__parent_path, 'mix_genre' ) # ~~/data_collect/mix_genre
+
   def get_category_textfile_path(self):
     '''
     選択されたジャンルの解析済みのまとめたテキストファイルのファイルパスを取得。
@@ -54,6 +60,25 @@ class FilePath():
       each_text_file 
       ) # ~~/data_collect/ジャンル_text/ジャンル_text_num.txt
 
+  def get_mix_each_text_file_name(self, num: int):
+    '''
+    ジャンル１００件分を解析したテキスト１つ１つに名前(番号)付け。→保存先はジャンル区別無しの「mix_genre/」
+    '''
+    each_text_file = '{}_text{}.txt'.format(self.__category, num) # ジャンル_text_num.txt
+    return os.path.join( 
+      self.get_mix_category_dir(),
+      each_text_file
+      ) # ~~/data_collect/mix_genre/ジャンル_text_num.txt
+
+  def get_ranking_value_file_name(self, query: str):
+    '''
+    クエリに対しての値を計算した後のランキングしたテキストファイルのパス。
+    '''
+    ranking_result_file = 'ranking_tfidf_value_{}.txt'.format(query)
+    return os.path.join(
+      self.__parent_path,
+      ranking_result_file
+    ) # ~~/data_collect/ranking_tfidf_value_クエリ.txt
 
   def create_category_dir(self):
     '''
@@ -73,6 +98,17 @@ class FilePath():
       os.system('mkdir ' + dir_path)
     else:
       shutil.rmtree(dir_path)
+      os.system('mkdir ' + dir_path)
+
+  def create_mix_category_dir(self):
+    '''
+    解析した１つ１つのテキストをジャンル区別無しに格納するディレクトリの作成。
+    複数回実行する度にテキストファイル群が上書きされてしまうので、一度消してから作成する。
+    '''
+    dir_path = os.path.join(self.__parent_path, 'mix_genre')
+    if not os.path.exists(dir_path):
+      os.system('mkdir ' + dir_path)
+
 
   def create_category_text_file(self):
     '''
@@ -82,5 +118,3 @@ class FilePath():
     text_path = os.path.join(self.__parent_path, self.__text_file)
     if not os.path.exists(text_path):
       os.system('touch ' + text_path)
-    else:
-      os.remove(text_path)

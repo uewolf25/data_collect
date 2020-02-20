@@ -17,7 +17,7 @@ class ReadWrite():
     except IOError:
       print('{} is cannot be opend .'.format(text_file))
     except UnicodeDecodeError:
-      print('{0} is not decoded .'.format(text_file) )
+      print('{} is not decoded .'.format(text_file) )
     else:
       text = f.read()
       f.close()
@@ -37,3 +37,13 @@ class ReadWrite():
     else:
       f.write(string)
       f.close()
+
+  def write_text_dict(self, dictonary: dict, text_file: str) -> None:
+    for key, value in dictonary:
+      try:
+        f = open(text_file, 'a')
+      except IOError:
+        print('cannot be opened .')
+      else:
+        f.write('{0}:\t{1}\n\n'.format( key, str(value) ))
+        f.close()

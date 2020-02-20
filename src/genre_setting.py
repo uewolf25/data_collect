@@ -11,9 +11,10 @@ class GenreSetting():
     '''
     self.__genre_list = [
       'sports', # スポーツ
-      'society', # 社会
-      'goverment', # 政治
-      'technology', # 科学
+      'general', # 社会
+      'business', # 政治
+      'science', # 科学
+      'technology', # テクノロジー・技術
       'entertainment', # エンタメ・娯楽
       'health', # 健康
       'end' # 終了を表す単語 #

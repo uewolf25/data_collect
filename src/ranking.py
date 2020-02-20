@@ -89,7 +89,3 @@ class Ranking():
 
     graph.graph(rank_list, freq_list, self.__text_file_path)
   
-
-# if __name__ == '__main__':
-#   ranking = Ranking("sports")
-#   ranking.rank_and_freq( ranking.annalys_documents() )
